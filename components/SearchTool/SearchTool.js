@@ -1,7 +1,11 @@
 import React from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 
-const SearchTool = (props) =><TextInput  underlineColorAndroid={'transparent'} style={styles.textInput}/>
+const SearchTool = (props) =><TextInput  
+    underlineColorAndroid={'transparent'} 
+    returnKeyType={'search'} 
+    style={styles.textInput} 
+    onSubmitEditing={()=>console.log("input")}/>
 
 export default SearchTool;
 
