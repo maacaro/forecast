@@ -7,15 +7,15 @@ import {getForecast} from './api/forecastAPI';
 
 export const putSearchAtFirstOf = (lastSearches,search)=>{
   const nestLastSearch = lastSearches.slice(0,3)
-  nestLastSearch.unshift(search);
-  return nestLastSearch;
+   nestLastSearch.unshift({city:search, slected:false});
+  return nestLastSearch.map((item,index)=>({...item, id:index}));
 }
 
 export default class App extends React.Component {
 
   state = {
     cityForecast:{},
-    lastSearches:[]
+    lastSearches:[],
   }
   componentDidMount = async () => {
     try {
@@ -27,6 +27,7 @@ export default class App extends React.Component {
       console.log(error);
     }
   }
+
    _getForecast = async (city)=>{
     const cityForecast = await getForecast(city);
     this.setState({cityForecast});
@@ -50,7 +51,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <SearchTool onSearch ={(inputSearch)=>this._onSearch(inputSearch)} />
         <SearchResult  data = {this.state.cityForecast} />
-        <LastSearches data = {this.state.lastSearches.map(city=>({city}))}/>
+        <LastSearches data = {this.state.lastSearches}/>
       </View>
     );
   }

@@ -12,32 +12,55 @@ const Separator = () => {
     );
   }
 
-const ListItem = (props) =>(
-    <TouchableOpacity onPress={props.onPress} style={{borderBottomWidth: 0 }} >
+const ListItem = (props) =>{
+    console.log(props.selected)
+    return(
+    <TouchableOpacity onPress={props.onPress} onLongPress={()=>props.onLongPress(props.id)} style={{borderBottomWidth: 0 }} >
         <View style = {styles.containerItem}>
-            <Text >
+            <Text style = {props.selected ? styles.selected : null}>
                 {props.city}
             </Text>
         </View>
   </TouchableOpacity>
-);
+)};
 
-const LastSearches = (props)=>
-    (
-    <View style = {styles.container}>
-        <Text style = {styles.title}>Last Searches</Text>
-        <FlatList
-            data={props.data}
-            ItemSeparatorComponent={Separator}
-            renderItem={({ item })=>(
-                <ListItem
-                    city={ item.city } 
-                    onPress={()=>{}}
-                />
-            )}
-        />
-    </View>
-)
+class LastSearches extends React.Component{
+
+    state = {
+        selected: new Map()
+    }
+
+    _onLongPress = (id) => {
+        this.setState((state) => {
+          const selected = new Map(state.selected);
+          selected.set(id, !selected.get(id)); 
+          return {selected};
+        });
+      };
+
+    render(){
+        return(
+            <View style = {styles.container}>
+            <Text style = {styles.title}>Last Searches</Text>
+            <FlatList
+                data={this.props.data}
+                ItemSeparatorComponent={Separator}
+                extraData={this.state}
+                renderItem={({ item })=>(
+                    <ListItem
+                        city={ item.city } 
+                        id ={ item.id }
+                        onPress={()=>{console.log("press")}}
+                        selected={!!this.state.selected.get(item.id)}
+                        onLongPress={this._onLongPress}
+                    />
+                )}
+            />
+            </View>
+        )
+
+    }
+} 
 
 export default LastSearches;
 
@@ -58,5 +81,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 14,
         marginBottom:5
+    },
+    selected:{
+        color: 'red',
     }
   });
