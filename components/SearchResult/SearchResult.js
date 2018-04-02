@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const SearchResult = (props)=>(
     <View>
+        <Text>Weather in {props.data.city}</Text>
         <View style = {styles.innerContainer} >
             <Text>Tempature: </Text> 
             <Text>{props.data.temp}</Text>

@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import SearchTool from './components/SearchTool/SearchTool';
 import SearchResult from './components/SearchResult/SearchResult';
-import {getForecast} from './api/forecastAPI'
+import LastSearches from './components/LastSearches/LastSearches';
+import {getForecast} from './api/forecastAPI';
+
 
 export default class App extends React.Component {
   state = {
@@ -10,17 +12,13 @@ export default class App extends React.Component {
   }
   _getForecast = async (city)=>{
     const cityForecast = await getForecast(city);
-    this.setState({cityForecast},console.log(this.state));
   }
   render() {
     return (
       <View style={styles.container}>
-        <SearchTool
-          onSearch ={(inputSearch)=> this._getForecast(inputSearch)}
-        />
-        <SearchResult
-          data = {this.state.cityForecast}
-        />
+        <SearchTool onSearch ={(inputSearch)=> this._getForecast(inputSearch)} />
+        <SearchResult  data = {this.state.cityForecast} />
+        <LastSearches data = {[{city:"London"},{city:"Paris"}]}/>
       </View>
     );
   }
