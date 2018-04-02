@@ -5,6 +5,7 @@ export function getForecast(city="London"){
     return fetch(`${url}q=${city}&appid=${apiKey}`)
     .then(response=>response.json())
     .then(response => (response && ({
+            city,
             ...response.coord,
             ...response.main
         })) || {}

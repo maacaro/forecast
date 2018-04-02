@@ -54,6 +54,7 @@ describe('getForecast',()=>{
             fetch = jest.fn();
             fetch.mockImplementationOnce(()=>Promise.resolve({json:jest.fn(()=>Promise.resolve(endpointResponse))}));
             const response = {
+                    city:"London",
                     lon:-0.13,
                     lat:51.51,
                     temp:279.85,
