@@ -13,7 +13,6 @@ const Separator = () => {
   }
 
 const ListItem = (props) =>{
-    console.log(props.selected)
     return(
     <TouchableOpacity onPress={props.onPress} onLongPress={()=>props.onLongPress(props.id)} style={{borderBottomWidth: 0 }} >
         <View style = {styles.containerItem}>
@@ -38,7 +37,22 @@ class LastSearches extends React.Component{
         });
       };
 
+    onDelete = ()=>{
+        const selectedItems = this.props.data
+            .filter(item => !!this.state.selected.get(item.id))
+            .map(item=>item.id);
+
+        const nextSelected = new Map(this.setState.selected);
+            
+        this.props.deleteLastSearchesItem(selectedItems);
+        selectedItems.forEach(itemId=>nextSelected.delete(itemId));
+        this.setState({selected:nextSelected});
+
+
+    }
+
     render(){
+        const isSomeItemSelected = Array.from(this.state.selected.values()).some(selected =>selected);
         return(
             <View style = {styles.container}>
             <Text style = {styles.title}>Last Searches</Text>
@@ -56,6 +70,7 @@ class LastSearches extends React.Component{
                     />
                 )}
             />
+            {isSomeItemSelected ? <TouchableOpacity onPress={()=>this.onDelete()} style = {styles.deleteButton}><Text>Delete</Text></TouchableOpacity>:null}
             </View>
         )
 
@@ -84,5 +99,9 @@ const styles = StyleSheet.create({
     },
     selected:{
         color: 'red',
+    },
+    deleteButton:{
+        marginTop:20,
+        padding:10
     }
   });

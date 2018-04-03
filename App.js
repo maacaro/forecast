@@ -7,7 +7,7 @@ import {getForecast} from './api/forecastAPI';
 
 export const putSearchAtFirstOf = (lastSearches,search)=>{
   const nestLastSearch = lastSearches.slice(0,3)
-   nestLastSearch.unshift({city:search, slected:false});
+   nestLastSearch.unshift({city:search});
   return nestLastSearch.map((item,index)=>({...item, id:index}));
 }
 
@@ -28,6 +28,25 @@ export default class App extends React.Component {
     }
   }
 
+  deleteLastSearchesItem = (itemsToDelete)=>{
+    const nextLastSearches = this.state.lastSearches
+      .filter(item=>!itemsToDelete.includes(item.id))
+      .map((item,index)=>({...item, id:index}));
+
+    this.setState({
+      lastSearches: nextLastSearches
+      }, this.setLastSearchesInAsyncStorage
+    );
+  }
+
+  setLastSearchesInAsyncStorage = async(lastSearches)=>{
+    try {
+      await AsyncStorage.setItem('lastSearches',JSON.stringify(this.state.lastSearches));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
    _getForecast = async (city)=>{
     const cityForecast = await getForecast(city);
     this.setState({cityForecast});
@@ -36,13 +55,7 @@ export default class App extends React.Component {
     this._getForecast(inputSearch);
     this.setState({
         lastSearches: putSearchAtFirstOf(this.state.lastSearches,inputSearch)
-      }, async ()=> {
-        try {
-          await AsyncStorage.setItem('lastSearches',JSON.stringify(this.state.lastSearches));
-        } catch (error) {
-          console.log(error);
-        }
-      }
+      }, this.setLastSearchesInAsyncStorage
     );
     
   }
@@ -51,7 +64,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <SearchTool onSearch ={(inputSearch)=>this._onSearch(inputSearch)} />
         <SearchResult  data = {this.state.cityForecast} />
-        <LastSearches data = {this.state.lastSearches}/>
+        <LastSearches data = {this.state.lastSearches} deleteLastSearchesItem={this.deleteLastSearchesItem}/>
       </View>
     );
   }
