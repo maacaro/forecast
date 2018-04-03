@@ -64,7 +64,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <SearchTool onSearch ={(inputSearch)=>this._onSearch(inputSearch)} />
         <SearchResult  data = {this.state.cityForecast} />
-        <LastSearches data = {this.state.lastSearches} deleteLastSearchesItem={this.deleteLastSearchesItem}/>
+        <LastSearches  data = {this.state.lastSearches}  deleteLastSearchesItem={this.deleteLastSearchesItem} onSearch ={this._onSearch}/>
       </View>
     );
   }

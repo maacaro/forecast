@@ -64,7 +64,7 @@ class LastSearches extends React.Component{
                     <ListItem
                         city={ item.city } 
                         id ={ item.id }
-                        onPress={()=>{console.log("press")}}
+                        onPress={()=>this.props.onSearch(item.city)}
                         selected={!!this.state.selected.get(item.id)}
                         onLongPress={this._onLongPress}
                     />
